@@ -1,20 +1,5 @@
 import random
-import tkinter as tk
-import os
 import string
-
-# class PasswordGenerater:
-#     def __init__(self) -> None:
-        
-#         root = tk.Tk()
-#         root.title("Random password generater")
-#         root.mainloop()
-    
-#     def generater(self) -> None:
-#         characters = ""
-#         if use_
-
-# PasswordGenerater()
 
 def generator(uppercase: bool, lowercase: bool, numbers: bool, symbols: bool, length: int) -> None:
     characters = ""
@@ -33,6 +18,7 @@ def generator(uppercase: bool, lowercase: bool, numbers: bool, symbols: bool, le
     password = "".join(random.choice(characters) for _ in range(length))
 
     return password
+
 print("Type Yes/yes to include or anything else to not include in the password.")
 uppercase = input("Do you want any uppercase letters: ").lower() == "yes"
 lowercase = input("Do you want any lowercase letters: ").lower() == "yes"

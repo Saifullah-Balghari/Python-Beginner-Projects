@@ -2,8 +2,7 @@ import tkinter as tk
 import random
 import string
 
-
-class PasswordGenerator:
+class RandomPasswordGeneratorApp:
     def __init__(self) -> None:
         
         root = tk.Tk()
@@ -27,6 +26,9 @@ class PasswordGenerator:
         password = "".join(random.choice(characters) for _ in range(length))
 
         return password
-        
 
-PasswordGenerator()
+def main():        
+    RandomPasswordGeneratorApp()
+
+if __name__=="__main__":
+    main()
