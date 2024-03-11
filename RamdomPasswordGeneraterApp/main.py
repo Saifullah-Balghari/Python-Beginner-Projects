@@ -61,8 +61,8 @@ class RandomPasswordGeneratorApp:
 
         if not self.characters:
             messagebox.showinfo("Error", "You must select at least one option!")
-            return None    
-            
+            return None
+        
         password_length = self.length.get()
         password = "".join(random.choice(self.characters) for _ in range(password_length))
         self.password_label.config(text=password)
