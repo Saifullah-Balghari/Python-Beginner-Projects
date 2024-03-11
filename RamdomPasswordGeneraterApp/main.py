@@ -2,13 +2,16 @@ import tkinter as tk
 from tkinter import messagebox
 import random
 import string
+import customtkinter as ctk
+
+ctk.set_appearance_mode('light')
 
 class RandomPasswordGeneratorApp:
     
     def __init__(self) -> None:
 
-        self.root = tk.Tk()
-        self.length = tk.IntVar(value=12)
+        self.root = ctk.CTk()
+        self.length = ctk.IntVar(value=12)
         self.gui()
         self.root.mainloop()
     
