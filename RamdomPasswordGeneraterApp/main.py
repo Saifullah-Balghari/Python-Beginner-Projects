@@ -10,6 +10,9 @@ class RandomPasswordGeneratorApp:
     
     def __init__(self) -> None:
 
+        self.password_label = None
+        self.lowerCaseCheckBoxVar = None
+        self.lowerCaseCheckBox = None
         self.root = ctk.CTk()
         self.length = ctk.IntVar(value=12)
         self.gui()
@@ -70,9 +73,11 @@ class RandomPasswordGeneratorApp:
         password = "".join(random.choice(self.characters) for _ in range(password_length))
         self.password_label.config(text=password)
 
+
 def main():
 
     RandomPasswordGeneratorApp()
 
-if __name__=="__main__":
+
+if __name__ == "__main__":
     main()
