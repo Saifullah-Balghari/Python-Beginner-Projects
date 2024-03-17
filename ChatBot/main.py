@@ -1,5 +1,6 @@
 import customtkinter as ctk
 from difflib import get_close_matches as gcm
+from tkinter import messagebox
 import tkinter as tk
 import json
 
@@ -87,22 +88,33 @@ class ChatBotApp:
 
 
     def load_memory(self):
-        """ Takes a file path as input, reads JSON data from the file,
-        and returns it as a dictionary"""
-        with open(self.file_path, "r") as f:
-            self.data = json.load(f)
-        return self.data
-
+        """
+        Takes a file path as input, reads JSON data from the file,
+        and returns it as a dictionary.
+        """
+        try:
+            with open(self.file_path, "r") as f:
+                self.data = json.load(f)
+            return self.data
+        except FileNotFoundError:
+            messagebox.showerror("Error", "An error occurred! Could\'t find \"memory.json\"")
 
     def save_memory(self):
-        """ Takes in a file path and a dictionary, and saves the dictionary into a 
-        file path(JSON file) with specified indentation"""
-        with open(self.file_path, "w") as f:
-            json.dump(self.data, f, indent=2)
+        """ 
+        Takes in a file path and a dictionary, and saves the dictionary into a 
+        file path(JSON file) with specified indentation.
+        """
+        try:
+            with open(self.file_path, "w") as f:
+                json.dump(self.data, f, indent=2)
+        except:
+            messagebox.showerror("Error", "An error occurred! Could\'t save memory.")
 
 
     def best_matches(self):
-        """ Finds the best match with the accuracy of 60%"""
+        """
+        Finds the best match with the accuracy of 60%.
+        """
         self.matches = gcm(self.user_input, self.questions, n=1, cutoff=0.6)
         return self.matches[0] if self.matches else None
 
@@ -114,23 +126,34 @@ class ChatBotApp:
 
 
     def input_process(self):
+        self.text = ""
         self.user_input = self.entry.get()
+
         if self.user_input.lower() == 'quit':
             return None
+        
+        elif self.user_input == "":
+            messagebox.showerror("Error", "Please type anything!")
+
         else:
             self.best_match = self.best_matches()
+
             if self.best_match:
                 self.answer = self.get_ans_4_question()
                 self.text += f"Bot: {self.answer}\n"
-            else:
+
+            elif self.user_input: 
                 self.text += "Bot: I don\'t know the answer. Can you teach me? if yes please provide a correct answer and don\'t use extra words.\nType the answer or 'skip' to skip."
                 new_answer = self.entry.get()
+
                 if new_answer.lower() != 'skip':
                     self.memory["questions"].append({"question": self.user_input, "answer": new_answer})
                     self.save_memory()
                     self.text += "Thanks for teaching me!\n"
+
         self.text_label.configure(text=self.text)
         self.entry.delete(0, tk.END)
+
 
 if __name__ == "__main__":
     ChatBotApp()
