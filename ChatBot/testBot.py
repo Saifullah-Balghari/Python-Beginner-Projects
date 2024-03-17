@@ -53,7 +53,7 @@ def main():
                 memory["questions"].append({"question": user_input, "answer": new_answer})
                 save_memory('memory.json', memory)
                 print("Thanks for teaching me!")
-
+    
 
 if __name__ == "__main__":
     main()
