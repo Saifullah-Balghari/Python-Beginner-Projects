@@ -9,6 +9,9 @@ ctk.set_default_color_theme("blue")
 
 
 class ChatBotApp:
+    """
+    
+    """
     def __init__(self):
 
         # Variable declarations
@@ -49,7 +52,7 @@ class ChatBotApp:
         self.sidebar_frame.grid_rowconfigure(4, weight=1)
         
         # logo
-        self.logo_label = ctk.CTkLabel(self.sidebar_frame, text="ApoGPT 2.0", font=ctk.CTkFont(size=20, weight="bold"))
+        self.logo_label = ctk.CTkLabel(self.sidebar_frame, text="ApoGPT 2.0", font=ctk.CTkFont(size=30, weight="bold"))
         self.logo_label.grid(row=0, column=0, padx=20, pady=(20, 10))
 
         # Appearance mode option menu
@@ -65,15 +68,16 @@ class ChatBotApp:
         self.scaling_optionemenu.grid(row=8, column=0, padx=20, pady=(10, 20))
 
         # Main entry box and button
-        self.entry = ctk.CTkEntry(self.root, placeholder_text=" Type here...")
+        self.entry = ctk.CTkEntry(self.root, placeholder_text="Type here...", text_color='green', placeholder_text_color="green")
         self.entry.grid(row=3, column=1, columnspan=2, padx=(20, 0), pady=(20, 20), sticky="nsew")
         self.main_button_1 = ctk.CTkButton(self.root, fg_color="transparent", border_width=2, text="Submit" , text_color=("gray10", "#DCE4EE"), command=self.input_process)
         self.main_button_1.grid(row=3, column=3, padx=(20, 20), pady=(20, 20), sticky="nsew")
         
         # Main text label
-        self.text_label = ctk.CTkLabel(self.root, text=self.text)
+        self.text_label = ctk.CTkLabel(self.root, text=self.text, font=ctk.CTkFont(size=14, weight="bold"))
         self.text_label.grid(row=0, column=1, columnspan=3, padx=(20, 20), pady=(20, 20), sticky="nsew")
 
+        # Setting defaults
         self.appearance_mode_optionemenu.set("Dark")
         self.scaling_optionemenu.set("100%")
 
@@ -115,7 +119,7 @@ class ChatBotApp:
         """
         Finds the best match with the accuracy of 60%.
         """
-        self.matches = gcm(self.user_input, self.questions, n=1, cutoff=0.6)
+        self.matches = gcm(self.user_input, self.questions, n=1, cutoff=0.9)
         return self.matches[0] if self.matches else None
 
 
@@ -126,14 +130,12 @@ class ChatBotApp:
 
 
     def input_process(self):
-        self.text = ""
+        self.text = "Hey, There! you can ask me any thing or teach me something.\n"
         self.user_input = self.entry.get()
 
         if self.user_input.lower() == 'quit':
             return None
         
-        elif self.user_input == "":
-            messagebox.showerror("Error", "Please type anything!")
 
         else:
             self.best_match = self.best_matches()
@@ -143,13 +145,22 @@ class ChatBotApp:
                 self.text += f"Bot: {self.answer}\n"
 
             elif self.user_input: 
-                self.text += "Bot: I don\'t know the answer. Can you teach me? if yes please provide a correct answer and don\'t use extra words.\nType the answer or 'skip' to skip."
-                new_answer = self.entry.get()
+                self.text += "Bot: I don\'t know the answer. Can you teach me? if yes please provide a correct answer and don\'t use extra words.\nType the answer or 'skip' to skip.\n"
+                self.text_label.after(100, self.wait_for_answer)
 
-                if new_answer.lower() != 'skip':
-                    self.memory["questions"].append({"question": self.user_input, "answer": new_answer})
-                    self.save_memory()
-                    self.text += "Thanks for teaching me!\n"
+        self.text_label.configure(text=self.text)
+        self.entry.delete(0, tk.END)
+
+
+    def wait_for_answer(self):
+        self.new_answer = self.entry.get()
+
+        if self.new_answer.lower() != 'skip':
+            self.memory["questions"].append({"question": self.user_input, "answer": self.new_answer})
+            self.save_memory()
+            self.text += "Bot: Thanks for teaching me!\n"
+        else:
+            self.text += "Bot: You've chosen to skip teaching. If you want to teach later, just type your question again.\n"
 
         self.text_label.configure(text=self.text)
         self.entry.delete(0, tk.END)
