@@ -52,7 +52,7 @@ class ChatBotApp:
         self.sidebar_frame.grid_rowconfigure(4, weight=1)
         
         # logo
-        self.logo_label = ctk.CTkLabel(self.sidebar_frame, text="ApoGPT 2.0", font=ctk.CTkFont(size=30, weight="bold"))
+        self.logo_label = ctk.CTkLabel(self.sidebar_frame, text="ChatBot !AI", font=ctk.CTkFont(size=30, weight="bold"))
         self.logo_label.grid(row=0, column=0, padx=20, pady=(20, 10))
 
         # Appearance mode option menu
@@ -68,7 +68,7 @@ class ChatBotApp:
         self.scaling_optionemenu.grid(row=8, column=0, padx=20, pady=(10, 20))
 
         # Main entry box and button
-        self.entry = ctk.CTkEntry(self.root, placeholder_text="Type here...", text_color='green', placeholder_text_color="green")
+        self.entry = ctk.CTkEntry(self.root, placeholder_text="Type here...")
         self.entry.grid(row=3, column=1, columnspan=2, padx=(20, 0), pady=(20, 20), sticky="nsew")
         self.main_button_1 = ctk.CTkButton(self.root, fg_color="transparent", border_width=2, text="Submit" , text_color=("gray10", "#DCE4EE"), command=self.input_process)
         self.main_button_1.grid(row=3, column=3, padx=(20, 20), pady=(20, 20), sticky="nsew")
@@ -113,13 +113,13 @@ class ChatBotApp:
                 json.dump(self.data, f, indent=2)
         except:
             messagebox.showerror("Error", "An error occurred! Could\'t save memory.")
-
+            
 
     def best_matches(self):
         """
         Finds the best match with the accuracy of 60%.
         """
-        self.matches = gcm(self.user_input, self.questions, n=1, cutoff=0.9)
+        self.matches = gcm(self.user_input, self.questions, n=1, cutoff=0.6)
         return self.matches[0] if self.matches else None
 
 
@@ -130,23 +130,17 @@ class ChatBotApp:
 
 
     def input_process(self):
-        self.text = "Hey, There! you can ask me any thing or teach me something.\n"
-        self.user_input = self.entry.get()
+        self.text = "Bot: Hey,There! You can ask me any thing or teach me something new.\n"
+        self.user_input = self.entry.get()    
+        self.best_match = self.best_matches()
 
-        if self.user_input.lower() == 'quit':
-            return None
-        
+        if self.best_match:
+            self.answer = self.get_ans_4_question()
+            self.text += f"Bot: {self.answer}\n"
 
-        else:
-            self.best_match = self.best_matches()
-
-            if self.best_match:
-                self.answer = self.get_ans_4_question()
-                self.text += f"Bot: {self.answer}\n"
-
-            elif self.user_input: 
-                self.text += "Bot: I don\'t know the answer. Can you teach me? if yes please provide a correct answer and don\'t use extra words.\nType the answer or 'skip' to skip.\n"
-                self.text_label.after(100, self.wait_for_answer)
+        elif self.user_input: 
+            self.text += "Bot: I don\'t know the answer. Can you teach me? if yes please provide a correct answer and don\'t use extra words.\nType the answer or 'skip' to skip.\n"
+            self.text_label.after(20000, self.wait_for_answer)
 
         self.text_label.configure(text=self.text)
         self.entry.delete(0, tk.END)
@@ -168,4 +162,3 @@ class ChatBotApp:
 
 if __name__ == "__main__":
     ChatBotApp()
-
