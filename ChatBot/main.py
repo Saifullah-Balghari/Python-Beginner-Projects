@@ -9,14 +9,12 @@ ctk.set_default_color_theme("blue")
 
 
 class ChatBotApp:
-    """
-    
-    """
+
     def __init__(self):
 
         # Variable declarations
         self.icon_path = 'logo.png'
-        self.file_path  = 'memory.json'
+        self.file_path = 'memory.json'
         self.memory: dict = self.load_memory()
         self.questions: list | None = [ i ['question'] for i in self.memory['questions']]
         self.user_input: str = ""
